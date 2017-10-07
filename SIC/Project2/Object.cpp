@@ -1,10 +1,11 @@
 #pragma once
 #include "Object.h"
-
+#pragma warning(disable : 4996)
 
 int stringToInt(string key)
 {
-	char intVal[key.length()];
+	char* intVal;
+	intVal=new char[key.length()];
 	int value;
 
 	for (int i = 0; i<key.length(); i++)
@@ -52,7 +53,9 @@ string convertToObject(string opcode, string operand, int *len)
 		else if (operand[0] == 'C')
 		{
 			int temp, i;
-			char buf[2], hexVal1[(operand.length() - 3) * 2];
+			char buf[2];
+			char* hexVal1;
+			hexVal1=new char[(operand.length() - 3) * 2];
 			string val;
 
 			for (int i = 2; i<operand.length() - 1; i++)
@@ -77,3 +80,23 @@ string convertToObject(string opcode, string operand, int *len)
 
 	return value;
 }
+
+
+string object(string m, int add)
+
+{
+
+	char buff[4];
+
+	string val;
+
+	itoa(add, buff, 16);
+
+	val = buff;
+
+	//cout<<m<<endl;
+
+	return(m + val);
+
+}
+

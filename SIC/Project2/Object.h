@@ -4,7 +4,7 @@
 
 string convertToObject(string, string, int*);
 
-void insertLabel(string, int);
+
 
 int stringToInt(string);
 

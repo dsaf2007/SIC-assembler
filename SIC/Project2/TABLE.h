@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <iomanip>
 #include <cmath>
 
 using namespace std;
+
 
 struct OPTAB {
 	string name[60] = { "ADD","ADDF","ADDR","AND","CLEAR","COMP","COMPF","COMPR","DIV","DIVF","DIVR","FIX","FLOAT","HIO","J","JEQ",
@@ -33,9 +34,8 @@ public:
 };
 
 
-int SYMTAB::isEmpty = -1;
-int program_size = 0;
-int no_of_symbols = 0;
-int startingAddress = 0;
-OPTAB optab;
-SYMTAB symtab[20];
+static int program_size = 0;
+static int no_of_symbols = 0;
+static int startingAddress = 0;
+static OPTAB optab;
+static SYMTAB symtab[20];

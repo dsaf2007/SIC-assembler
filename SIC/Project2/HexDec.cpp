@@ -1,6 +1,7 @@
 #pragma once
-#include <string.h>
+#include <string>
 #include "HexDec.h"
+#pragma warning(disable : 4996)
 
 int hexToDec(string key)
 {
