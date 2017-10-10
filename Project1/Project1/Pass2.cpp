@@ -116,7 +116,7 @@ void pass2() //pass2
     {
         cout<<"INPUT FILE ASSEMBLED SUCCESSFULY!!"<<endl;
     }
-	cout << "Hello" << endl;
+
 }
 
 void assemble(string a[])

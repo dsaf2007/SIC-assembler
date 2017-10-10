@@ -10,7 +10,7 @@
 
 
  int block_num, line;
- hexa locctr;
+ hexa loc_ctr;
  string curr_block;
  bool error_flag = 0;
  ofstream error;
@@ -70,38 +70,39 @@ void pass1()
         line+=5;
         cout<<"s: "<<s<<endl;
     }
-    locctr="0";
-    BLOCK["DEFAULT"].num=0;
-    BLOCK["DEFAULT"].address=locctr;
+    loc_ctr="0";//opcode가 start가 아닐경우 locctr 0으로 initialize
+    BLOCK["DEFAULT"].num=0;//block 초기화
+    BLOCK["DEFAULT"].address=loc_ctr;
     BLOCK["DEFAULT"].length="0";
     BLOCK["DEFAULT"].exist='y';
     curr_block="DEFAULT";
     block_num=1;
     line=5;
-    if(word[0]=="START")
+    if(word[0]=="START")//0에서 start할 때
     {
-        locctr=word[1];
+        loc_ctr=word[1];
         fout1<<line<<endl;
         fout1<<""<<endl;
         fout1<<"START"<<endl;
-        fout1<<locctr<<endl;
-        fout1<<locctr<<endl;
+        fout1<<loc_ctr<<endl;
+        fout1<<loc_ctr<<endl;
         fout1<<""<<endl;
         cout<<"0 is start!"<<endl;
     }
-    else if(word[1]=="START")
+    else if(word[1]=="START")//1에서 strat할 때
     {
-        locctr=word[2];
+        loc_ctr=word[2];
         fout1<<line<<endl;
         fout1<<word[0]<<endl;
         fout1<<"START"<<endl;
-        fout1<<locctr<<endl;
-        fout1<<locctr<<endl;
+        fout1<<loc_ctr<<endl;
+        fout1<<loc_ctr<<endl;
         fout1<<""<<endl;
         cout<<"1 is start!"<<endl;
     }
     else
         execute(word,count);
+
     while(true)
     {
         getline(fin1,s);
@@ -119,13 +120,13 @@ void pass1()
             fout1<<""<<endl;
             continue;
         }
-        if(word[0]=="END")
+        if(word[0]=="END")//end일 때
         {
-            BLOCK[curr_block].length=locctr;
-            fout1<<""<<endl;
+            BLOCK[curr_block].length=loc_ctr;//block의 길이=locctr
+            fout1<<""<<endl;//intermediatefile에 출력
             fout1<<word[0]<<endl;
             fout1<<word[1]<<endl;
-            fout1<<locctr<<endl;
+            fout1<<loc_ctr<<endl;
             fout1<<""<<endl;
             break;
         }
@@ -139,7 +140,7 @@ void pass1()
      for(int i=1;i<block_num;++i)
      {
             temp=find_block(i);
-            BLOCK[temp].address=toHex(toDec(addr)+toDec(len));
+            BLOCK[temp].address=toHex(toDec(addr)+toDec(len));//block adress=locctr
             addr=BLOCK[temp].address;
             len=BLOCK[temp].length;
 
@@ -148,46 +149,46 @@ void pass1()
 
 void execute(string word[],int count)
 {
-    cout<<"word[0]: "<<word[0]<<" pc: "<<locctr<<endl;
+    cout<<"word[0]: "<<word[0]<<" pc: "<<loc_ctr<<endl;
     if(word[0]=="USE")
     {
         cout<<"USE detected!"<<endl;
-        BLOCK[curr_block].length=locctr;
+        BLOCK[curr_block].length=loc_ctr;
         if(word[1]=="")
         {
             curr_block="DEFAULT";
-            locctr=BLOCK["DEFAULT"].length;
+            loc_ctr=BLOCK["DEFAULT"].length;//locctr에 defaul block의 길이로 초기화
         }
         else if(BLOCK[word[1]].exist=='y')
         {
             curr_block=word[1];
-            locctr=BLOCK[word[1]].length;
+            loc_ctr=BLOCK[word[1]].length;
         }
-        else
+        else//block[word[1]]이 없을 경우
         {
             BLOCK[word[1]].num=block_num;
             BLOCK[word[1]].exist='y';
             BLOCK[word[1]].length="0";
             curr_block=word[1];
-            locctr="0";
-            ++block_num;
+            loc_ctr="0";
+            ++block_num;//block을 하나 민다.
         }
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<locctr<<endl;
+        fout1<<loc_ctr<<endl;
         fout1<<""<<endl;
         return;
     }
-    if(word[0][0]=='+')
+    if(word[0][0]=='+')//+로 시작할 경우 4형식
     {
         cout<<"Format 4"<<endl;
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<locctr<<endl;
-        locctr=toHex(toDec(locctr)+4);
-        fout1<<locctr<<endl;
+        fout1<<loc_ctr<<endl;
+        loc_ctr=toHex(toDec(loc_ctr)+4);
+        fout1<<loc_ctr<<endl;
         return;
     }
     if(OPTAB[word[0]].exist=='y')
@@ -196,9 +197,9 @@ void execute(string word[],int count)
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<locctr<<endl;
-        locctr=toHex(toDec(locctr)+OPTAB[word[0]].format);
-        fout1<<locctr<<endl;
+        fout1<<loc_ctr<<endl;
+        loc_ctr=toHex(toDec(loc_ctr)+OPTAB[word[0]].format);
+        fout1<<loc_ctr<<endl;
         return;
     }
     if(OPTAB[word[0]].exist=='n')
@@ -210,32 +211,32 @@ void execute(string word[],int count)
         }
         else
         {
-            SYMTAB[word[0]].address=locctr;
+            SYMTAB[word[0]].address=loc_ctr;
             SYMTAB[word[0]].block=curr_block;
             SYMTAB[word[0]].exist='y';
             fout1<<word[0]<<endl;
             fout1<<word[1]<<endl;
             fout1<<word[2]<<endl;
-            fout1<<locctr<<endl;
+            fout1<<loc_ctr<<endl;
             if(word[1][0]=='+')
-                locctr=toHex(toDec(locctr)+4);
+                loc_ctr=toHex(toDec(loc_ctr)+4);
             else if(OPTAB[word[1]].exist=='y')
-                locctr=toHex(toDec(locctr)+OPTAB[word[1]].format);
-            else if(word[1]=="WORD")      locctr=toHex(toDec(locctr)+3);
-            else if(word[1]=="RESW")      locctr=toHex(toDec(locctr)+(atoi(word[2].c_str())*3));
-            else if(word[1]=="RESB")      locctr=toHex(toDec(locctr)+atoi(word[2].c_str()));
+                loc_ctr=toHex(toDec(loc_ctr)+OPTAB[word[1]].format);
+            else if(word[1]=="WORD")      loc_ctr=toHex(toDec(loc_ctr)+3);
+            else if(word[1]=="RESW")      loc_ctr=toHex(toDec(loc_ctr)+(atoi(word[2].c_str())*3));
+            else if(word[1]=="RESB")      loc_ctr=toHex(toDec(loc_ctr)+atoi(word[2].c_str()));
             else if(word[1]=="BYTE")
             {
                  int len=word[1].length()-3;
                  if(word[1][0]=='X') len/=2;
-                 locctr=toHex(toDec(locctr)+len);
+                 loc_ctr=toHex(toDec(loc_ctr)+len);
             }
             else
             {
                 error<<"Line "<<line<<": Opcode not found"<<endl;
                 error_flag=1;
             }
-            fout1<<locctr<<endl;
+            fout1<<loc_ctr<<endl;
         }
     }
 }

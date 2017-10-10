@@ -3,7 +3,7 @@
 
 void main()
 {
-//	pass1();
-//	pass2();
-	cout << "hello";
+	pass1();
+	pass2();
+
 }
