@@ -63,16 +63,16 @@ typedef map<label, info_block>   MapType4;
 //USING MAPS ALLOWS SEARCHING FOR ANY ENTRY IN LOG(N) TIME
 
 //This maps the instructions(mnemonic codes) with thier Opcode and their format
-static MapType1 OPTAB;
+extern MapType1 OPTAB;
 
 //This maps the register mnemonic with their number
-static MapType2 REGISTER;
+extern MapType2 REGISTER;
 
 //This map forms the symbol table : Label and  Address
-static MapType3 SYMTAB;
+extern MapType3 SYMTAB;
 
 //This maps the program block name with its info
-static MapType4 BLOCK;
+extern MapType4 BLOCK;
 
 
 int reg_num(char a);

@@ -9,8 +9,14 @@
 #include "Pass1.h"
 
 
-static ifstream fin1;
-static ofstream fout1;
+ int block_num, line;
+ hexa locctr;
+ string curr_block;
+ bool error_flag = 0;
+ ofstream error;
+
+ifstream fin1;
+ofstream fout1;
 
 
 bool isWhiteSpace(char a)
@@ -39,13 +45,16 @@ void extract(string a,string word[],int& count)
 
 
 
-void run()
+void pass1()
 {
     create();
     char ch;
-    string s,word[5];
+    string s,word[5],inputfilename;
+	cout << "파일 이름을 입력하시오(.txt만,확장자명 생략) :";
+	cin >> inputfilename;
+	inputfilename += ".txt";
     int count=0;
-    fin1.open("input_fibonacci.txt");
+    fin1.open(inputfilename);
     fout1.open("intermediate.txt");
     error.open("error.txt");
     line=5;
@@ -61,9 +70,9 @@ void run()
         line+=5;
         cout<<"s: "<<s<<endl;
     }
-    pc="0";
+    locctr="0";
     BLOCK["DEFAULT"].num=0;
-    BLOCK["DEFAULT"].address=pc;
+    BLOCK["DEFAULT"].address=locctr;
     BLOCK["DEFAULT"].length="0";
     BLOCK["DEFAULT"].exist='y';
     curr_block="DEFAULT";
@@ -71,23 +80,23 @@ void run()
     line=5;
     if(word[0]=="START")
     {
-        pc=word[1];
+        locctr=word[1];
         fout1<<line<<endl;
         fout1<<""<<endl;
         fout1<<"START"<<endl;
-        fout1<<pc<<endl;
-        fout1<<pc<<endl;
+        fout1<<locctr<<endl;
+        fout1<<locctr<<endl;
         fout1<<""<<endl;
         cout<<"0 is start!"<<endl;
     }
     else if(word[1]=="START")
     {
-        pc=word[2];
+        locctr=word[2];
         fout1<<line<<endl;
         fout1<<word[0]<<endl;
         fout1<<"START"<<endl;
-        fout1<<pc<<endl;
-        fout1<<pc<<endl;
+        fout1<<locctr<<endl;
+        fout1<<locctr<<endl;
         fout1<<""<<endl;
         cout<<"1 is start!"<<endl;
     }
@@ -112,11 +121,11 @@ void run()
         }
         if(word[0]=="END")
         {
-            BLOCK[curr_block].length=pc;
+            BLOCK[curr_block].length=locctr;
             fout1<<""<<endl;
             fout1<<word[0]<<endl;
             fout1<<word[1]<<endl;
-            fout1<<pc<<endl;
+            fout1<<locctr<<endl;
             fout1<<""<<endl;
             break;
         }
@@ -139,20 +148,20 @@ void run()
 
 void execute(string word[],int count)
 {
-    cout<<"word[0]: "<<word[0]<<" pc: "<<pc<<endl;
+    cout<<"word[0]: "<<word[0]<<" pc: "<<locctr<<endl;
     if(word[0]=="USE")
     {
         cout<<"USE detected!"<<endl;
-        BLOCK[curr_block].length=pc;
+        BLOCK[curr_block].length=locctr;
         if(word[1]=="")
         {
             curr_block="DEFAULT";
-            pc=BLOCK["DEFAULT"].length;
+            locctr=BLOCK["DEFAULT"].length;
         }
         else if(BLOCK[word[1]].exist=='y')
         {
             curr_block=word[1];
-            pc=BLOCK[word[1]].length;
+            locctr=BLOCK[word[1]].length;
         }
         else
         {
@@ -160,13 +169,13 @@ void execute(string word[],int count)
             BLOCK[word[1]].exist='y';
             BLOCK[word[1]].length="0";
             curr_block=word[1];
-            pc="0";
+            locctr="0";
             ++block_num;
         }
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<pc<<endl;
+        fout1<<locctr<<endl;
         fout1<<""<<endl;
         return;
     }
@@ -176,9 +185,9 @@ void execute(string word[],int count)
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<pc<<endl;
-        pc=toHex(toDec(pc)+4);
-        fout1<<pc<<endl;
+        fout1<<locctr<<endl;
+        locctr=toHex(toDec(locctr)+4);
+        fout1<<locctr<<endl;
         return;
     }
     if(OPTAB[word[0]].exist=='y')
@@ -187,9 +196,9 @@ void execute(string word[],int count)
         fout1<<""<<endl;
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
-        fout1<<pc<<endl;
-        pc=toHex(toDec(pc)+OPTAB[word[0]].format);
-        fout1<<pc<<endl;
+        fout1<<locctr<<endl;
+        locctr=toHex(toDec(locctr)+OPTAB[word[0]].format);
+        fout1<<locctr<<endl;
         return;
     }
     if(OPTAB[word[0]].exist=='n')
@@ -201,32 +210,32 @@ void execute(string word[],int count)
         }
         else
         {
-            SYMTAB[word[0]].address=pc;
+            SYMTAB[word[0]].address=locctr;
             SYMTAB[word[0]].block=curr_block;
             SYMTAB[word[0]].exist='y';
             fout1<<word[0]<<endl;
             fout1<<word[1]<<endl;
             fout1<<word[2]<<endl;
-            fout1<<pc<<endl;
+            fout1<<locctr<<endl;
             if(word[1][0]=='+')
-                pc=toHex(toDec(pc)+4);
+                locctr=toHex(toDec(locctr)+4);
             else if(OPTAB[word[1]].exist=='y')
-                pc=toHex(toDec(pc)+OPTAB[word[1]].format);
-            else if(word[1]=="WORD")      pc=toHex(toDec(pc)+3);
-            else if(word[1]=="RESW")      pc=toHex(toDec(pc)+(atoi(word[2].c_str())*3));
-            else if(word[1]=="RESB")      pc=toHex(toDec(pc)+atoi(word[2].c_str()));
+                locctr=toHex(toDec(locctr)+OPTAB[word[1]].format);
+            else if(word[1]=="WORD")      locctr=toHex(toDec(locctr)+3);
+            else if(word[1]=="RESW")      locctr=toHex(toDec(locctr)+(atoi(word[2].c_str())*3));
+            else if(word[1]=="RESB")      locctr=toHex(toDec(locctr)+atoi(word[2].c_str()));
             else if(word[1]=="BYTE")
             {
                  int len=word[1].length()-3;
                  if(word[1][0]=='X') len/=2;
-                 pc=toHex(toDec(pc)+len);
+                 locctr=toHex(toDec(locctr)+len);
             }
             else
             {
                 error<<"Line "<<line<<": Opcode not found"<<endl;
                 error_flag=1;
             }
-            fout1<<pc<<endl;
+            fout1<<locctr<<endl;
         }
     }
 }

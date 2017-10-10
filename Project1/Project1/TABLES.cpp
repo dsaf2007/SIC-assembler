@@ -1,6 +1,16 @@
 #include "TABLES.h"
-//stores info of ach mnemonic instruction
 
+
+
+
+
+MapType1 OPTAB;
+
+MapType2 REGISTER;
+
+MapType3 SYMTAB;
+
+MapType4 BLOCK;
 
 
 int reg_num(char a)
@@ -15,10 +25,10 @@ int reg_num(char a)
 }
 
 
-/*---------OPTABLE-----------*/
+
 void create()
 {
-
+	//optable
 OPTAB["ADD"].opcode="18";
 OPTAB["ADD"].format=3;
 OPTAB["ADD"].exist='y';
@@ -255,11 +265,7 @@ OPTAB["WD"].opcode="DC";
 OPTAB["WD"].format=3;
 OPTAB["WD"].exist='y';
 
-/*-------------------------*/
-
-
-
-/*---REGISTERS'-INFO-------*/
+//register
 
 REGISTER["A"].num=0;
 REGISTER["A"].exist='y';
@@ -288,7 +294,7 @@ REGISTER["PC"].exist='y';
 REGISTER["SW"].num=9;
 REGISTER["SW"].exist='y';
 
-/*--------------------------*/
+
 
 }
 

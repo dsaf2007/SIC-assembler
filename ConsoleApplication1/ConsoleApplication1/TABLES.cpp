@@ -1,6 +1,16 @@
 #include "TABLES.h"
 
+//This maps the instructions(mnemonic codes) with thier Opcode and their format
+ MapType1 OPTAB;
 
+//This maps the register mnemonic with their number
+ MapType2 REGISTER;
+
+//This map forms the symbol table : Label and  Address
+ MapType3 SYMTAB;
+
+//This maps the program block name with its info
+ MapType4 BLOCK;
 
 int reg_num(char a)
 {

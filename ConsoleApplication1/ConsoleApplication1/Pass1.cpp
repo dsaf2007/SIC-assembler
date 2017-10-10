@@ -9,8 +9,15 @@
 #include "Pass1.h"
 
 
-static ifstream fin1;
-static ofstream fout1;
+ifstream fin1;
+ ofstream fout1;
+ ofstream error;
+
+int block_num, line;
+hexa pc;
+string curr_block=0;
+bool error_flag;
+
 
 
 bool isWhiteSpace(char a)

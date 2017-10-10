@@ -59,23 +59,23 @@ typedef map<mnemonic, info_op>   MapType1;
 typedef map<mnemonic, info_reg>  MapType2;
 typedef map<label, info_label>   MapType3;
 typedef map<label, info_block>   MapType4;
-//USING MAPS ALLOWS SEARCHING FOR ANY ENTRY IN LOG(N) TIME
-
-//This maps the instructions(mnemonic codes) with thier Opcode and their format
-MapType1 OPTAB;
-
-//This maps the register mnemonic with their number
-MapType2 REGISTER;
-
-//This map forms the symbol table : Label and  Address
-MapType3 SYMTAB;
-
-//This maps the program block name with its info
-MapType4 BLOCK;
 
 
-int reg_num(char a);
+//op 코드와형식.
+extern MapType1 OPTAB;
 
-void create();
+//레지스터와 숫자
+extern MapType2 REGISTER;
+
+//SYMTAB
+extern MapType3 SYMTAB;
+
+//programblock
+extern MapType4 BLOCK;
+
+
+int reg_num(char a);//레지스터 숫자 반환
+
+void create();//optable생성
 
 string find_block(int num);

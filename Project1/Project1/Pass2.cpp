@@ -1,25 +1,13 @@
-/*
-  THIS FILE CONTAINS THE CODE FOR THE SECOND PASS OF THE ASSEMBLER.
-  USES ONLY INTERMEDIATE FILE.
-  PRODUCES LISTING FILE AND OBJECT FILE.
 
-  @AUTHOR: Himanshu Jariyal
-  B.TECH, CSE 2ND YEAR
-  IIT ROORKEE
-*/
 
-#pragma once
-#include<climits>
 
-using namespace std;
-
-#include "pass1.cpp"
+#include "pass2.h"
 
 ofstream obj,lst,mod;
 ifstream intm;
 int curr_block_num;
 
-void modify_object_file()
+void modify_object_file()//modification file을 읽어와서 string s에 넣는다.
 {
    ifstream fin;
    fin.open("modification.txt");
@@ -30,12 +18,12 @@ void modify_object_file()
        if(s=="") break;
        obj<<s<<endl;
    }
-   //fin.close();
+
 }
 
 bool imm,ind;
 
-void input(string a[])
+void input(string a[])//intermediate file을 string a에 입력한다.
 {
     int i;
     for(i=0;i<6;++i)
@@ -45,24 +33,18 @@ void input(string a[])
         cout<<a[i]<<endl;
 }
 
-void assemble(string[]);
-string gen_code(string[]);
+
 
 string text_s="",text_e="";
 int text_length=0,base=INT_MAX;
 
-int main()
+void pass2() //pass2
 {
-    run();
+  
     string a[6];
     char ch;
     hexa start;
-    if(error_flag)
-    {
-        cout<<"Errors encountered! Listing file not prepared!"<<endl;
-        cout<<"Have a look at the error file to know more!"<<endl;
-        exit(1);
-    }
+
     intm.open("intermediate.txt");
     obj.open("object.txt");
     lst.open("list.txt");
@@ -134,6 +116,7 @@ int main()
     {
         cout<<"INPUT FILE ASSEMBLED SUCCESSFULY!!"<<endl;
     }
+	cout << "Hello" << endl;
 }
 
 void assemble(string a[])
@@ -198,7 +181,7 @@ void assemble(string a[])
     }
 }
 
-string gen_code(string a[])
+string gen_code(string a[])//objectcode를 생성
 {
     string ob1,ob2,ob3;
     hexa operand_addr,prgm_ctr;

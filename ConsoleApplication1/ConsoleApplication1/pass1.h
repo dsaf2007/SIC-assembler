@@ -6,14 +6,14 @@
 using namespace std;
 
 
-static int block_num, line;
-static hexa pc;
-static string curr_block;
-static bool error_flag = 0;
+extern int block_num, line;
+extern hexa pc;
+extern string curr_block;
+extern bool error_flag;
 
 
 
-static ofstream error;
+extern ofstream error;
 
 bool isWhiteSpace(char a);
 
