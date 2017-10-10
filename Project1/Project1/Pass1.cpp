@@ -1,12 +1,6 @@
-/*
-  THIS FILE CONTAINS THE CODE FOR THE FIRST PASS OF THE ASSEMBLER.
-  PRODUCES INTERMEDIATE FILE.
 
-  @AUTHOR: Himanshu Jariyal
-  B.TECH, CSE 2ND YEAR
-  IIT ROORKEE
-*/
 #include "Pass1.h"
+
 
 
  int block_num, line;
@@ -187,7 +181,7 @@ void execute(string word[],int count)
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
         fout1<<loc_ctr<<endl;
-        loc_ctr=toHex(toDec(loc_ctr)+4);
+        loc_ctr=toHex(toDec(loc_ctr)+4);//좌변의 loc_ctr은 pc와 동일. 변수를 하나만 사용하기 위해 loc_ctr로 이름붙임
         fout1<<loc_ctr<<endl;
         return;
     }
@@ -198,34 +192,34 @@ void execute(string word[],int count)
         fout1<<word[0]<<endl;
         fout1<<word[1]<<endl;
         fout1<<loc_ctr<<endl;
-        loc_ctr=toHex(toDec(loc_ctr)+OPTAB[word[0]].format);
+        loc_ctr=toHex(toDec(loc_ctr)+OPTAB[word[0]].format);//좌변의 loc_ctr은 pc와 동일. 변수를 하나만 사용하기 위해 loc_ctr로 이름붙임
         fout1<<loc_ctr<<endl;
         return;
     }
     if(OPTAB[word[0]].exist=='n')
     {
-        if(SYMTAB[word[0]].exist=='y')
+        if(SYMTAB[word[0]].exist=='y')//word가 op테이블에 없는 명령어일 때
         {
             error<<"Line "<<line<<": Duplicate Symbol"<<endl;
             error_flag=1;
         }
         else
         {
-            SYMTAB[word[0]].address=loc_ctr;
+            SYMTAB[word[0]].address=loc_ctr;//insert (LABEL,LOCCTR) into SYMTAB
             SYMTAB[word[0]].block=curr_block;
             SYMTAB[word[0]].exist='y';
             fout1<<word[0]<<endl;
             fout1<<word[1]<<endl;
             fout1<<word[2]<<endl;
             fout1<<loc_ctr<<endl;
-            if(word[1][0]=='+')
-                loc_ctr=toHex(toDec(loc_ctr)+4);
-            else if(OPTAB[word[1]].exist=='y')
+            if(word[1][0]=='+')//4형식일 때
+                loc_ctr=toHex(toDec(loc_ctr)+4);//pc+4 loc_ctr==pc
+            else if(OPTAB[word[1]].exist=='y')//4형식이 아닌경우 pc+=형식
                 loc_ctr=toHex(toDec(loc_ctr)+OPTAB[word[1]].format);
-            else if(word[1]=="WORD")      loc_ctr=toHex(toDec(loc_ctr)+3);
-            else if(word[1]=="RESW")      loc_ctr=toHex(toDec(loc_ctr)+(atoi(word[2].c_str())*3));
-            else if(word[1]=="RESB")      loc_ctr=toHex(toDec(loc_ctr)+atoi(word[2].c_str()));
-            else if(word[1]=="BYTE")
+            else if(word[1]=="WORD")      loc_ctr=toHex(toDec(loc_ctr)+3);//add 3 to LOCCTR
+            else if(word[1]=="RESW")      loc_ctr=toHex(toDec(loc_ctr)+(atoi(word[2].c_str())*3));//add 3*#[OPERAND] to LOCCTR
+            else if(word[1]=="RESB")      loc_ctr=toHex(toDec(loc_ctr)+atoi(word[2].c_str()));//add #[OPERAND] to LOCCTR
+            else if(word[1]=="BYTE")//find length of constant in bytes add length to LOCCTR
             {
                  int len=word[1].length()-3;
                  if(word[1][0]=='X') len/=2;
